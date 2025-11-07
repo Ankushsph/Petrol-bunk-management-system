@@ -295,7 +295,7 @@ export default function DailyComparisonPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400">Today's Sales</p>
+                <p className="text-sm font-medium text-gray-400">Today&apos;s Sales</p>
                 <h3 className="text-2xl font-bold text-white mt-1">
                   {formatCurrency(comparisonData.difference.sales)}
                 </h3>
@@ -319,7 +319,7 @@ export default function DailyComparisonPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400">Today's Volume</p>
+                <p className="text-sm font-medium text-gray-400">Today&apos;s Volume</p>
                 <h3 className="text-2xl font-bold text-white mt-1">
                   {comparisonData.difference.volume.toLocaleString()} L
                 </h3>
