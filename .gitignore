@@ -131,6 +131,10 @@ wheels/
 *.egg
 MANIFEST
 
+# Allow Next.js application's TypeScript library code
+!lib/*.ts
+!lib/**/*.ts
+
 # PyInstaller
 *.manifest
 *.spec
