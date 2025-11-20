@@ -23,6 +23,10 @@ async function getClient(): Promise<MongoClient> {
 		return cachedClient;
 	}
 
+	const insecureLocal =
+		(process.env.NODE_ENV || "development") !== "production" &&
+		process.platform === "win32";
+
 	const client = new MongoClient(getMongoUri(), {
 		// Required for Atlas stable API
 		serverApi: {
@@ -32,7 +36,10 @@ async function getClient(): Promise<MongoClient> {
 		},
 		// Ensure TLS for SRV connections; allow insecure only if explicitly enabled for local debugging
 		tls: true,
-		tlsAllowInvalidCertificates: process.env.MONGODB_TLS_INSECURE === "true",
+		tlsAllowInvalidCertificates:
+			process.env.MONGODB_TLS_INSECURE === "true" || insecureLocal,
+		tlsAllowInvalidHostnames:
+			process.env.MONGODB_TLS_INSECURE === "true" || insecureLocal,
 	});
 	await client.connect();
 	cachedClient = client;
