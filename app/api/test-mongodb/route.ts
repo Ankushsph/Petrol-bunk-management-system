@@ -1,27 +1,15 @@
 import { NextResponse } from "next/server"
-import { MongoClient } from "mongodb"
+import { getDb } from "lib/mongodb"
 
 export async function GET() {
   const uri = process.env.MONGODB_URI || ""
-  console.log("Testing connection with URI:", uri.replace(/:[^:]*@/, ":****@")) // Log URI with password hidden
+  console.log("Testing connection with URI:", uri.replace(/:[^:]*@/, ":****@"))
 
   try {
-    console.log("Creating MongoDB client...")
-    const client = new MongoClient(uri, {
-      // Explicitly set SSL options
-      ssl: true,
-      tls: true,
-    })
-
-    console.log("Attempting to connect...")
-    await client.connect()
-    console.log("Connected successfully!")
-
-    const db = client.db("loginDB")
+    const db = await getDb("loginDB")
+    // light ping
+    await db.command({ ping: 1 })
     const collections = await db.listCollections().toArray()
-
-    await client.close()
-    console.log("Connection closed")
 
     return NextResponse.json({
       success: true,
@@ -30,13 +18,12 @@ export async function GET() {
     })
   } catch (error) {
     console.error("Connection error details:", error)
-
     return NextResponse.json(
       {
         success: false,
         message: "MongoDB connection failed",
-        error: error.message,
-        stack: error.stack,
+        error: (error as Error).message,
+        stack: (error as Error).stack,
       },
       { status: 500 },
     )
